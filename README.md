@@ -13,6 +13,7 @@ Scripts for automating Kepler based Nvidia driver installation and configuration
 - Arch Linux installed on your system.
 - A Kepler-based NVIDIA GPU.
 - Basic knowledge of Linux commands.
+- `yay` ([Yet Another Yaourt](https://github.com/Jguer/yay)) installed on your system.
 
 ## Installation
 
