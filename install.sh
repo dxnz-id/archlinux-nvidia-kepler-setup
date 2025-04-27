@@ -29,14 +29,15 @@ fi
 # Set the name of the log file to include the current date and time
 LOG="Install-Logs/install-$(date +%d-%H%M%S)_nvidia.log"
 
-
-# nvidia stuff
-printf "${YELLOW} Checking for other hyprland packages and remove if any..${RESET}\n"
-if pacman -Qs hyprland > /dev/null; then
-    printf "${YELLOW} Hyprland detected. removing to install Hyprland from official repo...${RESET}\n"
-    for hyprnvi in hyprland-git hyprland-nvidia hyprland-nvidia-git hyprland-nvidia-hidpi-git; do
-        sudo pacman -R --noconfirm "$hyprnvi" 2>/dev/null | tee -a "$LOG" || true
-    done
+# Remove nouveau driver if present
+printf "${YELLOW} Checking for nouveau driver and removing if found...${RESET}\n"
+if lsmod | grep -q nouveau; then
+    printf "${YELLOW} Nouveau driver detected. Removing...${RESET}\n"
+    sudo pacman -R --noconfirm xf86-video-nouveau 2>/dev/null | tee -a "$LOG" || true
+    sudo modprobe -r nouveau 2>/dev/null | tee -a "$LOG" || true
+    printf "${OK} Nouveau driver removed successfully.\n" 2>&1 | tee -a "$LOG"
+else
+    printf "${INFO} No nouveau driver detected. Moving on...\n" 2>&1 | tee -a "$LOG"
 fi
 
 # Install additional Nvidia packages
